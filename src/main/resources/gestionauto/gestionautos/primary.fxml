@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="gestionauto.gestionautos.PrimaryController">
+
+    <!-- ================= LEFT PANEL (FORMULARIO) ================= -->
+
+    <left>
+        <VBox spacing="10" prefWidth="300">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <Label text="Gestión de Vehículos"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+            <Separator/>
+
+            <Label text="Patente"/>
+            <TextField fx:id="txtPatente"/>
+
+            <Label text="Marca"/>
+            <TextField fx:id="txtMarca"/>
+
+            <Label text="Año"/>
+            <TextField fx:id="txtAnio"/>
+
+            <Label text="Precio Base"/>
+            <TextField fx:id="txtPrecio"/>
+
+            <Label text="Tipo Vehículo"/>
+            <ComboBox fx:id="cmbTipo"/>
+
+            <Label fx:id="lblExtra" text="Puertas"/>
+            <TextField fx:id="txtExtra"/>
+
+            <Separator/>
+
+            <HBox spacing="10">
+                <Button text="Agregar"
+                        onAction="#agregarVehiculo"
+                        prefWidth="90"/>
+
+                <Button text="Modificar"
+                        onAction="#modificarVehiculo"
+                        prefWidth="90"/>
+
+                <Button text="Eliminar"
+                        onAction="#eliminarVehiculo"
+                        prefWidth="90"/>
+            </HBox>
+
+        </VBox>
+    </left>
+
+    <!-- ================= CENTER PANEL ================= -->
+
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <!-- 🔎 ORDEN Y FILTRO ARRIBA DE TABLA -->
+
+            <HBox spacing="20" alignment="CENTER_LEFT">
+
+                <VBox spacing="5">
+                    <Label text="Ordenar por"/>
+                    <ComboBox fx:id="cbOrdenar" prefWidth="150"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Filtrar por precio"/>
+                    <ComboBox fx:id="cbFiltrar" prefWidth="150"/>
+                </VBox>
+
+            </HBox>
+
+            <Separator/>
+
+            <!-- 📋 TABLA -->
+
+            <TableView fx:id="tablaVehiculos" VBox.vgrow="ALWAYS">
+
+                <columns>
+                    <TableColumn fx:id="colPatente"
+                                 text="Patente"
+                                 prefWidth="150"/>
+
+                    <TableColumn fx:id="colMarca"
+                                 text="Marca"
+                                 prefWidth="150"/>
+
+                    <TableColumn fx:id="colAnio"
+                                 text="Año"
+                                 prefWidth="100"/>
+
+                    <TableColumn fx:id="colPrecio"
+                                 text="Precio Final"
+                                 prefWidth="150"/>
+                </columns>
+
+            </TableView>
+
+            <Separator/>
+
+            <!-- 💾 EXPORTAR ABAJO -->
+
+            <VBox spacing="5">
+                <Label text="Exportar Datos"
+                       style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+
+                <HBox spacing="15">
+                    <Button text="Exportar CSV"
+                            onAction="#exportarCSV"
+                            prefWidth="120"/>
+
+                    <Button text="Exportar TXT"
+                            onAction="#exportarTXT"
+                            prefWidth="120"/>
+
+                    <Button text="Exportar JSON"
+                            onAction="#exportarJSON"
+                            prefWidth="120"/>
+                </HBox>
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
