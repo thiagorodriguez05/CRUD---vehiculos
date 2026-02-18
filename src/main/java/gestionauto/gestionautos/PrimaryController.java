@@ -331,47 +331,85 @@ private void aplicarOrden() {
     // FORMULARIO
     // =======================
 
-    private Vehiculo crearVehiculoDesdeFormulario() {
+private Vehiculo crearVehiculoDesdeFormulario() {
 
-        if (txtPatente.getText().isBlank())
-            throw new IllegalArgumentException("La patente es obligatoria");
+    String patente = txtPatente.getText().trim();
+    String marca = txtMarca.getText().trim();
+    String anioTexto = txtAnio.getText().trim();
+    String precioTexto = txtPrecio.getText().trim();
+    String extraTexto = txtExtra.getText().trim();
 
-        if (txtMarca.getText().isBlank())
-            throw new IllegalArgumentException("La marca es obligatoria");
+    // =====================
+    // VALIDACIONES BASICAS
+    // =====================
 
-        try {
+    if (patente.isEmpty())
+        throw new IllegalArgumentException("La patente es obligatoria");
 
-            String patente = txtPatente.getText().trim();
-            String marca = txtMarca.getText().trim();
-            int anio = Integer.parseInt(txtAnio.getText().trim());
-            double precio = Double.parseDouble(txtPrecio.getText().trim());
-            TipoVehiculo tipo = cmbTipo.getValue();
+    if (!patente.matches("^[A-Za-z0-9]{6,7}$"))
+        throw new IllegalArgumentException("Formato de patente inválido");
 
-            switch (tipo) {
+    if (marca.isEmpty())
+        throw new IllegalArgumentException("La marca es obligatoria");
 
-                case AUTO:
-                    return new Auto(patente, marca, anio,
-                            Integer.parseInt(txtExtra.getText().trim()),
-                            precio);
+    if (!marca.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$"))
+        throw new IllegalArgumentException("La marca solo puede contener letras");
 
-                case MOTO:
-                    return new Moto(patente, marca, anio,
-                            Integer.parseInt(txtExtra.getText().trim()),
-                            precio);
+    if (anioTexto.isEmpty())
+        throw new IllegalArgumentException("El año es obligatorio");
 
-                case CAMION:
-                    return new Camion(patente, marca, anio,
-                            Double.parseDouble(txtExtra.getText().trim()),
-                            precio);
+    if (precioTexto.isEmpty())
+        throw new IllegalArgumentException("El precio es obligatorio");
 
-                default:
-                    throw new IllegalArgumentException("Tipo inválido");
-            }
+    if (extraTexto.isEmpty())
+        throw new IllegalArgumentException("El campo adicional es obligatorio");
 
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Campos numéricos inválidos");
+    try {
+
+        int anio = Integer.parseInt(anioTexto);
+        double precio = Double.parseDouble(precioTexto);
+
+        // =====================
+        // VALIDACIONES LOGICAS
+        // =====================
+
+        if (anio < 1900 || anio > 2026)
+            throw new IllegalArgumentException("El año no es válido");
+
+        if (precio <= 0)
+            throw new IllegalArgumentException("El precio debe ser mayor a 0");
+
+        TipoVehiculo tipo = cmbTipo.getValue();
+
+        switch (tipo) {
+
+            case AUTO:
+                int puertas = Integer.parseInt(extraTexto);
+                if (puertas <= 0)
+                    throw new IllegalArgumentException("Cantidad de puertas inválida");
+                return new Auto(patente, marca, anio, puertas, precio);
+
+            case MOTO:
+                int cilindrada = Integer.parseInt(extraTexto);
+                if (cilindrada <= 0)
+                    throw new IllegalArgumentException("Cilindrada inválida");
+                return new Moto(patente, marca, anio, cilindrada, precio);
+
+            case CAMION:
+                double carga = Double.parseDouble(extraTexto);
+                if (carga <= 0)
+                    throw new IllegalArgumentException("Carga máxima inválida");
+                return new Camion(patente, marca, anio, carga, precio);
+
+            default:
+                throw new IllegalArgumentException("Tipo inválido");
         }
+
+    } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Campos numéricos inválidos");
     }
+}
+
 
    private void cargarFormulario(Vehiculo v) {
 
