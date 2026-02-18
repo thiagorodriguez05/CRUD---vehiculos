@@ -54,7 +54,7 @@ El sistema fue diseñado aplicando herencia y polimorfismo.
 
 El sistema genera y utiliza distintos tipos de archivos:
 
-### 📂 Archivo .dat (Serialización)
-Permite guardar y cargar la lista de vehículos.
+## 💾 Archivos Generados
 
-Ejemplo:
+La aplicación permite exportar e importar información en distintos formatos de archivo para garantizar persistencia y compatibilidad con otras herramientas.
+
