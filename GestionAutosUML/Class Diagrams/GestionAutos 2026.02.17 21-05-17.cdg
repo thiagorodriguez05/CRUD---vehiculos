@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="GestionAutos">
+  <ClassDiagramComponents>
+    <Class name="App" package="gestionauto.gestionautos" visibility="public" xPosition="263.0" yPosition="112.0">
+      <Fields>
+        <Field name="scene" type="Scene" visibility="private" isStatic="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="start" returnType="void" visibility="public">
+          <Argument type="Stage" name="stage"/>
+        </Method>
+        <Method name="setRoot" returnType="void" visibility="package" isStatic="true">
+          <Argument type="String" name="fxml"/>
+        </Method>
+        <Method name="loadFXML" returnType="Parent" visibility="private" isStatic="true">
+          <Argument type="String" name="fxml"/>
+        </Method>
+        <Method name="main" returnType="void" visibility="public" isStatic="true">
+          <Argument type="String[]" name="args"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="ArchivoVehiculo" package="gestionauto.gestionautos" visibility="public" xPosition="86.0" yPosition="790.0">
+      <Fields>
+        <Field name="ARCHIVO_DAT" type="String" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="ARCHIVO_CSV" type="String" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="ARCHIVO_TXT" type="String" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="ARCHIVO_JSON" type="String" visibility="private" isStatic="true" isFinal="true"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="guardar" returnType="void" visibility="public" isStatic="true">
+          <Argument type="List&lt;? extends Vehiculo&gt;" name="lista"/>
+        </Method>
+        <Method name="cargar" returnType="List&lt;Vehiculo&gt;" visibility="public" isStatic="true"/>
+        <Method name="exportarCSV" returnType="void" visibility="public" isStatic="true">
+          <Argument type="List&lt;? extends Vehiculo&gt;" name="lista"/>
+        </Method>
+        <Method name="exportarTXT" returnType="void" visibility="public" isStatic="true">
+          <Argument type="List&lt;? extends Vehiculo&gt;" name="lista"/>
+        </Method>
+        <Method name="exportarJSON" returnType="void" visibility="public" isStatic="true">
+          <Argument type="List&lt;? extends Vehiculo&gt;" name="lista"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Auto" package="gestionauto.gestionautos" visibility="public" xPosition="611.0" yPosition="574.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="puertas" type="int" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+          <Argument type="String" name="marca"/>
+          <Argument type="int" name="anio"/>
+          <Argument type="int" name="puertas"/>
+          <Argument type="double" name="precioBase"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+          <Argument type="String" name="marca"/>
+          <Argument type="int" name="anio"/>
+          <Argument type="int" name="puertas"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getPuertas" returnType="int" visibility="public"/>
+        <Method name="calcularPrecio" returnType="double" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="Camion" package="gestionauto.gestionautos" visibility="public" xPosition="1070.0" yPosition="1689.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="cargaMaxima" type="double" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+          <Argument type="String" name="marca"/>
+          <Argument type="int" name="anio"/>
+          <Argument type="double" name="cargaMaxima"/>
+          <Argument type="double" name="precioBase"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+          <Argument type="String" name="marca"/>
+          <Argument type="int" name="anio"/>
+          <Argument type="double" name="cargaMaxima"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getCargaMaxima" returnType="double" visibility="public"/>
+        <Method name="calcularPrecio" returnType="double" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="GestionVehiculos" package="gestionauto.gestionautos" visibility="public" xPosition="1123.0" yPosition="217.0">
+      <Fields>
+        <Field name="listaVehiculos" type="List&lt;Vehiculo&gt;" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public"/>
+      </Constructors>
+      <Methods>
+        <Method name="crear" returnType="void" visibility="public">
+          <Argument type="Vehiculo" name="vehiculo"/>
+        </Method>
+        <Method name="leer" returnType="List&lt;Vehiculo&gt;" visibility="public"/>
+        <Method name="actualizar" returnType="void" visibility="public">
+          <Argument type="Vehiculo" name="vehiculo"/>
+        </Method>
+        <Method name="eliminar" returnType="void" visibility="public">
+          <Argument type="Vehiculo" name="vehiculo"/>
+        </Method>
+        <Method name="buscarPorPatente" returnType="Vehiculo" visibility="public">
+          <Argument type="String" name="patente"/>
+        </Method>
+        <Method name="filtrarPorTipo" returnType="List&lt;? extends Vehiculo&gt;" visibility="public">
+          <Argument type="Class&lt;? extends Vehiculo&gt;" name="tipo"/>
+        </Method>
+        <Method name="agregarATipoGeneral" returnType="void" visibility="public">
+          <Argument type="List&lt;? super Vehiculo&gt;" name="listaDestino"/>
+          <Argument type="Vehiculo" name="vehiculo"/>
+        </Method>
+        <Method name="iterator" returnType="Iterator&lt;Vehiculo&gt;" visibility="public"/>
+        <Method name="aplicarCambio" returnType="void" visibility="public">
+          <Argument type="Consumer&lt;Vehiculo&gt;" name="accion"/>
+        </Method>
+        <Method name="transformarVehiculos" returnType="void" visibility="public">
+          <Argument type="Function&lt;Vehiculo, Vehiculo&gt;" name="funcion"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="Moto" package="gestionauto.gestionautos" visibility="public" xPosition="20.0" yPosition="1099.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="cilindrada" type="int" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+          <Argument type="String" name="marca"/>
+          <Argument type="int" name="anio"/>
+          <Argument type="int" name="cilindrada"/>
+          <Argument type="double" name="precioBase"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+          <Argument type="String" name="marca"/>
+          <Argument type="int" name="anio"/>
+          <Argument type="int" name="cilindrada"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getCilindrada" returnType="int" visibility="public"/>
+        <Method name="calcularPrecio" returnType="double" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="PrimaryController" package="gestionauto.gestionautos" visibility="public" xPosition="1856.0" yPosition="864.0">
+      <Fields>
+        <Field name="txtPatente" type="TextField" visibility="private"/>
+        <Field name="txtMarca" type="TextField" visibility="private"/>
+        <Field name="txtAnio" type="TextField" visibility="private"/>
+        <Field name="txtPrecio" type="TextField" visibility="private"/>
+        <Field name="txtExtra" type="TextField" visibility="private"/>
+        <Field name="lblExtra" type="Label" visibility="private"/>
+        <Field name="cmbTipo" type="ComboBox&lt;TipoVehiculo&gt;" visibility="private"/>
+        <Field name="cbOrdenar" type="ComboBox&lt;String&gt;" visibility="private"/>
+        <Field name="cbFiltrar" type="ComboBox&lt;String&gt;" visibility="private"/>
+        <Field name="tablaVehiculos" type="TableView&lt;Vehiculo&gt;" visibility="private"/>
+        <Field name="colPatente" type="TableColumn&lt;Vehiculo, String&gt;" visibility="private"/>
+        <Field name="colMarca" type="TableColumn&lt;Vehiculo, String&gt;" visibility="private"/>
+        <Field name="colAnio" type="TableColumn&lt;Vehiculo, Integer&gt;" visibility="private"/>
+        <Field name="colPrecio" type="TableColumn&lt;Vehiculo, Double&gt;" visibility="private"/>
+        <Field name="vehiculos" type="ObservableList&lt;Vehiculo&gt;" visibility="private"/>
+        <Field name="listaFiltrada" type="FilteredList&lt;Vehiculo&gt;" visibility="private"/>
+        <Field name="listaOrdenada" type="SortedList&lt;Vehiculo&gt;" visibility="private"/>
+        <Field name="cargandoFormulario" type="boolean" visibility="private"/>
+      </Fields>
+      <Constructors/>
+      <Methods>
+        <Method name="initialize" returnType="void" visibility="public">
+          <Argument type="URL" name="url"/>
+          <Argument type="ResourceBundle" name="rb"/>
+        </Method>
+        <Method name="agregarVehiculo" returnType="void" visibility="private"/>
+        <Method name="modificarVehiculo" returnType="void" visibility="private"/>
+        <Method name="eliminarVehiculo" returnType="void" visibility="private"/>
+        <Method name="aplicarOrden" returnType="void" visibility="private"/>
+        <Method name="aplicarFiltro" returnType="void" visibility="private"/>
+        <Method name="exportarCSV" returnType="void" visibility="private"/>
+        <Method name="exportarJSON" returnType="void" visibility="private"/>
+        <Method name="exportarTXT" returnType="void" visibility="private"/>
+        <Method name="guardarDatos" returnType="void" visibility="private"/>
+        <Method name="crearVehiculoDesdeFormulario" returnType="Vehiculo" visibility="private"/>
+        <Method name="cargarFormulario" returnType="void" visibility="private">
+          <Argument type="Vehiculo" name="v"/>
+        </Method>
+        <Method name="actualizarFormularioPorTipo" returnType="void" visibility="private">
+          <Argument type="TipoVehiculo" name="tipo"/>
+        </Method>
+        <Method name="limpiarFormulario" returnType="void" visibility="private"/>
+        <Method name="mostrarError" returnType="void" visibility="private">
+          <Argument type="String" name="msg"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="SecondaryController" package="gestionauto.gestionautos" visibility="public" xPosition="293.0" yPosition="360.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="switchToPrimary" returnType="void" visibility="private"/>
+      </Methods>
+    </Class>
+    <Class name="Vehiculo" package="gestionauto.gestionautos" visibility="public" isAbstract="true" xPosition="771.0" yPosition="996.0">
+      <Fields>
+        <Field name="serialVersionUID" type="long" visibility="private" isStatic="true" isFinal="true"/>
+        <Field name="patente" type="String" visibility="protected"/>
+        <Field name="marca" type="String" visibility="protected"/>
+        <Field name="anio" type="int" visibility="protected"/>
+        <Field name="precioBase" type="double" visibility="protected"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+          <Argument type="String" name="marca"/>
+          <Argument type="int" name="anio"/>
+          <Argument type="double" name="precioBase"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+          <Argument type="String" name="marca"/>
+          <Argument type="int" name="anio"/>
+        </Constructor>
+        <Constructor visibility="public">
+          <Argument type="String" name="patente"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="getPatente" returnType="String" visibility="public"/>
+        <Method name="getMarca" returnType="String" visibility="public"/>
+        <Method name="getAnio" returnType="int" visibility="public"/>
+        <Method name="getPrecioBase" returnType="double" visibility="public"/>
+        <Method name="getPrecioFinal" returnType="double" visibility="public"/>
+        <Method name="equals" returnType="boolean" visibility="public">
+          <Argument type="Object" name="o"/>
+        </Method>
+        <Method name="hashCode" returnType="int" visibility="public"/>
+        <Method name="compareTo" returnType="int" visibility="public">
+          <Argument type="Vehiculo" name="otro"/>
+        </Method>
+        <Method name="calcularPrecio" returnType="double" visibility="public" isAbstract="true"/>
+      </Methods>
+    </Class>
+    <Class name="VehiculoAnioComparator" package="gestionauto.gestionautos" visibility="public" xPosition="738.0" yPosition="1712.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="compare" returnType="int" visibility="public">
+          <Argument type="Vehiculo" name="v1"/>
+          <Argument type="Vehiculo" name="v2"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="VehiculoDuplicadoException" package="gestionauto.gestionautos" visibility="public" xPosition="533.0" yPosition="343.0">
+      <Fields/>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="mensaje"/>
+        </Constructor>
+      </Constructors>
+      <Methods/>
+    </Class>
+    <Class name="VehiculoIterator" package="gestionauto.gestionautos" visibility="public" xPosition="1484.0" yPosition="619.0">
+      <Fields>
+        <Field name="indice" type="int" visibility="private"/>
+        <Field name="lista" type="List&lt;Vehiculo&gt;" visibility="private"/>
+      </Fields>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="List&lt;Vehiculo&gt;" name="lista"/>
+        </Constructor>
+      </Constructors>
+      <Methods>
+        <Method name="hasNext" returnType="boolean" visibility="public"/>
+        <Method name="next" returnType="Vehiculo" visibility="public"/>
+      </Methods>
+    </Class>
+    <Class name="VehiculoMarcaComparator" package="gestionauto.gestionautos" visibility="public" xPosition="236.0" yPosition="1550.0">
+      <Fields/>
+      <Constructors/>
+      <Methods>
+        <Method name="compare" returnType="int" visibility="public">
+          <Argument type="Vehiculo" name="v1"/>
+          <Argument type="Vehiculo" name="v2"/>
+        </Method>
+      </Methods>
+    </Class>
+    <Class name="VehiculoNoEncontradoException" package="gestionauto.gestionautos" visibility="public" xPosition="140.0" yPosition="517.0">
+      <Fields/>
+      <Constructors>
+        <Constructor visibility="public">
+          <Argument type="String" name="mensaje"/>
+        </Constructor>
+      </Constructors>
+      <Methods/>
+    </Class>
+    <Interface name="ICrud" package="gestionauto.gestionautos" visibility="public" xPosition="1789.0" yPosition="101.0">
+      <Methods>
+        <Method name="crear" returnType="void" visibility="package">
+          <Argument type="T" name="elemento"/>
+        </Method>
+        <Method name="leer" returnType="List&lt;T&gt;" visibility="package"/>
+        <Method name="actualizar" returnType="void" visibility="package">
+          <Argument type="T" name="elemento"/>
+        </Method>
+        <Method name="eliminar" returnType="void" visibility="package">
+          <Argument type="T" name="elemento"/>
+        </Method>
+      </Methods>
+    </Interface>
+    <Enum name="TipoVehiculo" package="gestionauto.gestionautos" visibility="public" xPosition="1928.0" yPosition="619.0">
+      <Literals>
+        <Literal name="AUTO"/>
+        <Literal name="MOTO"/>
+        <Literal name="CAMION"/>
+      </Literals>
+    </Enum>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations>
+    <HasRelation name="colPatente" source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <ImplementsRelation name="&lt;&lt;implements&gt;&gt;" source="gestionauto.gestionautos.GestionVehiculos" target="gestionauto.gestionautos.ICrud"/>
+    <IsRelation name="is" source="gestionauto.gestionautos.Camion" target="gestionauto.gestionautos.Vehiculo"/>
+    <HasRelation name="listaFiltrada" source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="FilteredList&lt;Vehiculo&gt;"/>
+    <IsRelation name="is" source="gestionauto.gestionautos.Auto" target="gestionauto.gestionautos.Vehiculo"/>
+    <UseRelation source="gestionauto.gestionautos.GestionVehiculos" target="gestionauto.gestionautos.Vehiculo" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="listaVehiculos" source="gestionauto.gestionautos.GestionVehiculos" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="List&lt;Vehiculo&gt;"/>
+    <HasRelation name="tablaVehiculos" source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="colMarca" source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="listaOrdenada" source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="SortedList&lt;Vehiculo&gt;"/>
+    <UseRelation source="gestionauto.gestionautos.Vehiculo" target="gestionauto.gestionautos.Vehiculo" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.Vehiculo" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="gestionauto.gestionautos.VehiculoMarcaComparator" target="gestionauto.gestionautos.Vehiculo" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="vehiculos" source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="ObservableList&lt;Vehiculo&gt;"/>
+    <HasRelation name="colAnio" source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="gestionauto.gestionautos.VehiculoAnioComparator" target="gestionauto.gestionautos.Vehiculo" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="lista" source="gestionauto.gestionautos.VehiculoIterator" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="0..*" collectionType="List&lt;Vehiculo&gt;"/>
+    <HasRelation name="colPrecio" source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.Vehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <IsRelation name="is" source="gestionauto.gestionautos.Moto" target="gestionauto.gestionautos.Vehiculo"/>
+    <UseRelation source="gestionauto.gestionautos.VehiculoIterator" target="gestionauto.gestionautos.Vehiculo" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <UseRelation source="gestionauto.gestionautos.ArchivoVehiculo" target="gestionauto.gestionautos.Vehiculo" sourceCardinality="1..1" targetCardinality="1..1"/>
+    <HasRelation name="cmbTipo" source="gestionauto.gestionautos.PrimaryController" target="gestionauto.gestionautos.TipoVehiculo" type="Aggregation" sourceCardinality="1..1" targetCardinality="1..1"/>
+  </ClassDiagramRelations>
+</ClassDiagram>
