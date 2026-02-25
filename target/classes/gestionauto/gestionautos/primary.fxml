@@ -7,7 +7,7 @@
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="gestionauto.gestionautos.PrimaryController">
 
-    <!-- ================= LEFT PANEL (FORMULARIO) ================= -->
+    <!-- ================= LEFT PANEL ================= -->
 
     <left>
         <VBox spacing="10" prefWidth="300">
@@ -35,23 +35,20 @@
             <Label text="Tipo Vehículo"/>
             <ComboBox fx:id="cmbTipo"/>
 
-            <Label fx:id="lblExtra" text="Puertas"/>
-            <TextField fx:id="txtExtra"/>
+            <!-- ATRIBUTOS ESPECIFICOS -->
+
+            <Label fx:id="lblExtra1" text=""/>
+            <TextField fx:id="txtExtra1"/>
+
+            <Label fx:id="lblExtra2" text=""/>
+            <TextField fx:id="txtExtra2"/>
 
             <Separator/>
 
             <HBox spacing="10">
-                <Button text="Agregar"
-                        onAction="#agregarVehiculo"
-                        prefWidth="90"/>
-
-                <Button text="Modificar"
-                        onAction="#modificarVehiculo"
-                        prefWidth="90"/>
-
-                <Button text="Eliminar"
-                        onAction="#eliminarVehiculo"
-                        prefWidth="90"/>
+                <Button text="Agregar" onAction="#agregarVehiculo" prefWidth="90"/>
+                <Button text="Modificar" onAction="#modificarVehiculo" prefWidth="90"/>
+                <Button text="Eliminar" onAction="#eliminarVehiculo" prefWidth="90"/>
             </HBox>
 
         </VBox>
@@ -65,9 +62,7 @@
                 <Insets top="15" right="15" bottom="15" left="15"/>
             </padding>
 
-            <!-- 🔎 ORDEN Y FILTRO ARRIBA DE TABLA -->
-
-            <HBox spacing="20" alignment="CENTER_LEFT">
+            <HBox spacing="20">
 
                 <VBox spacing="5">
                     <Label text="Ordenar por"/>
@@ -83,50 +78,27 @@
 
             <Separator/>
 
-            <!-- 📋 TABLA -->
-
             <TableView fx:id="tablaVehiculos" VBox.vgrow="ALWAYS">
 
                 <columns>
-                    <TableColumn fx:id="colPatente"
-                                 text="Patente"
-                                 prefWidth="150"/>
-
-                    <TableColumn fx:id="colMarca"
-                                 text="Marca"
-                                 prefWidth="150"/>
-
-                    <TableColumn fx:id="colAnio"
-                                 text="Año"
-                                 prefWidth="100"/>
-
-                    <TableColumn fx:id="colPrecio"
-                                 text="Precio Final"
-                                 prefWidth="150"/>
+                    <TableColumn fx:id="colPatente" text="Patente"/>
+                    <TableColumn fx:id="colMarca" text="Marca"/>
+                    <TableColumn fx:id="colAnio" text="Año"/>
+                    <TableColumn fx:id="colPrecio" text="Precio Final"/>
                 </columns>
 
             </TableView>
 
             <Separator/>
 
-            <!-- 💾 EXPORTAR ABAJO -->
-
             <VBox spacing="5">
                 <Label text="Exportar Datos"
                        style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
 
                 <HBox spacing="15">
-                    <Button text="Exportar CSV"
-                            onAction="#exportarCSV"
-                            prefWidth="120"/>
-
-                    <Button text="Exportar TXT"
-                            onAction="#exportarTXT"
-                            prefWidth="120"/>
-
-                    <Button text="Exportar JSON"
-                            onAction="#exportarJSON"
-                            prefWidth="120"/>
+                    <Button text="Exportar CSV" onAction="#exportarCSV"/>
+                    <Button text="Exportar TXT" onAction="#exportarTXT"/>
+                    <Button text="Exportar JSON" onAction="#exportarJSON"/>
                 </HBox>
             </VBox>
 

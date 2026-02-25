@@ -1,16 +1,30 @@
 [
   {
     "tipo": "Auto",
-    "patente": "asbd142",
-    "marca": "fsaf",
-    "anio": 31424,
-    "precio": 42142.0
+    "patente": "FRQ354",
+    "marca": "fiat",
+    "anio": 1900,
+    "precio": 60000.0
   },
   {
     "tipo": "Auto",
-    "patente": "asbd14rew",
-    "marca": "fsafttwe",
-    "anio": 3142425,
-    "precio": 42142.0525
+    "patente": "FAS431",
+    "marca": "fiat",
+    "anio": 1900,
+    "precio": 60000.0
+  },
+  {
+    "tipo": "Auto",
+    "patente": "AAB422",
+    "marca": "fiat",
+    "anio": 2000,
+    "precio": 20000.0
+  },
+  {
+    "tipo": "Moto",
+    "patente": "AAA123",
+    "marca": "fiat",
+    "anio": 1900,
+    "precio": 120000.0
   }
 ]

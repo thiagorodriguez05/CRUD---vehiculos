@@ -11,49 +11,77 @@ public class GestionVehiculos implements ICrud<Vehiculo>, Iterable<Vehiculo> {
     private List<Vehiculo> listaVehiculos;
 
     public GestionVehiculos() {
-        listaVehiculos = new ArrayList<>();
+        this.listaVehiculos = new ArrayList<>();
     }
 
     // =========================
-    // CRUD 
+    // CRUD
     // =========================
 
     @Override
     public void crear(Vehiculo vehiculo) {
+
+        if (vehiculo == null)
+            throw new IllegalArgumentException("El vehículo no puede ser null");
+
+        if (listaVehiculos.contains(vehiculo))
+            throw new VehiculoDuplicadoException(
+                    "Ya existe un vehículo con la patente: "
+                            + vehiculo.getPatente());
+
         listaVehiculos.add(vehiculo);
     }
 
     @Override
     public List<Vehiculo> leer() {
-        return listaVehiculos;
+        return new ArrayList<>(listaVehiculos);
     }
 
     @Override
     public void actualizar(Vehiculo vehiculo) {
-        for (int i = 0; i < listaVehiculos.size(); i++) {
-            if (listaVehiculos.get(i).getPatente()
-                    .equalsIgnoreCase(vehiculo.getPatente())) {
 
+        if (vehiculo == null)
+            throw new IllegalArgumentException("El vehículo no puede ser null");
+
+        for (int i = 0; i < listaVehiculos.size(); i++) {
+
+            if (listaVehiculos.get(i).equals(vehiculo)) {
                 listaVehiculos.set(i, vehiculo);
                 return;
             }
         }
+
+        throw new VehiculoNoEncontradoException(
+                "No se encontró el vehículo para actualizar: "
+                        + vehiculo.getPatente());
     }
 
     @Override
     public void eliminar(Vehiculo vehiculo) {
-        listaVehiculos.removeIf(v ->
-                v.getPatente().equalsIgnoreCase(vehiculo.getPatente()));
+
+        if (vehiculo == null)
+            throw new IllegalArgumentException("El vehículo no puede ser null");
+
+        boolean eliminado = listaVehiculos.remove(vehiculo);
+
+        if (!eliminado) {
+            throw new VehiculoNoEncontradoException(
+                    "No se encontró el vehículo para eliminar: "
+                            + vehiculo.getPatente());
+        }
     }
 
     // =========================
-    // BÚSQUEDA CON EXCEPCIÓN PROPIA
+    // BÚSQUEDA
     // =========================
 
-    public Vehiculo buscarPorPatente(String patente)
-            throws VehiculoNoEncontradoException {
+    public Vehiculo buscarPorPatente(String patente) {
+
+        if (patente == null || patente.isBlank())
+            throw new IllegalArgumentException("La patente no puede ser null o vacía");
 
         for (Vehiculo v : listaVehiculos) {
+
             if (v.getPatente().equalsIgnoreCase(patente)) {
                 return v;
             }
@@ -64,7 +92,7 @@ public class GestionVehiculos implements ICrud<Vehiculo>, Iterable<Vehiculo> {
     }
 
     // =========================
-    // FILTRO CON WILDCARD (? extends)
+    // FILTRO (? extends)
     // =========================
 
     public List<? extends Vehiculo> filtrarPorTipo(
@@ -73,6 +101,7 @@ public class GestionVehiculos implements ICrud<Vehiculo>, Iterable<Vehiculo> {
         List<Vehiculo> filtrados = new ArrayList<>();
 
         for (Vehiculo v : listaVehiculos) {
+
             if (tipo.isInstance(v)) {
                 filtrados.add(v);
             }
@@ -93,16 +122,16 @@ public class GestionVehiculos implements ICrud<Vehiculo>, Iterable<Vehiculo> {
     }
 
     // =========================
-    // ITERATOR PERSONALIZADO
+    // ITERABLE
     // =========================
 
     @Override
     public Iterator<Vehiculo> iterator() {
-        return new VehiculoIterator(listaVehiculos);
+        return listaVehiculos.iterator();
     }
 
     // =========================
-    // LAMBDAS / INTERFACES FUNCIONALES
+    // LAMBDAS
     // =========================
 
     public void aplicarCambio(Consumer<Vehiculo> accion) {

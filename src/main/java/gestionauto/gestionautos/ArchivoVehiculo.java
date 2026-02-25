@@ -16,8 +16,11 @@ public class ArchivoVehiculo {
     // =========================
     public static void guardar(List<? extends Vehiculo> lista) throws IOException {
 
+        File file = new File(ARCHIVO_DAT);
+        System.out.println("Guardando en: " + file.getAbsolutePath());
+
         ObjectOutputStream oos = new ObjectOutputStream(
-                new FileOutputStream(ARCHIVO_DAT)
+                new FileOutputStream(file)
         );
 
         oos.writeObject(lista);
@@ -31,8 +34,10 @@ public class ArchivoVehiculo {
     public static List<Vehiculo> cargar() throws IOException, ClassNotFoundException {
 
         File file = new File(ARCHIVO_DAT);
+        System.out.println("Cargando desde: " + file.getAbsolutePath());
 
         if (!file.exists()) {
+            System.out.println("El archivo no existe todavía.");
             return new ArrayList<>();
         }
 
@@ -42,6 +47,8 @@ public class ArchivoVehiculo {
 
         List<Vehiculo> lista = (List<Vehiculo>) ois.readObject();
         ois.close();
+
+        System.out.println("Vehículos leídos del archivo: " + lista.size());
 
         return lista;
     }

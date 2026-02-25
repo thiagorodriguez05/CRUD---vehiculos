@@ -1,2 +1,4 @@
-gestionauto.gestionautos.Auto@d50cf5fb
-gestionauto.gestionautos.Auto@c5a8602d
+Tipo: Auto | Patente: FRQ354 | Marca: fiat | Año: 1900 | Precio: 60000.0 | Puertas: 2 | Combustible: nafta
+Tipo: Auto | Patente: FAS431 | Marca: fiat | Año: 1900 | Precio: 60000.0 | Puertas: 2 | Combustible: nafta
+Tipo: Auto | Patente: AAB422 | Marca: fiat | Año: 2000 | Precio: 20000.0 | Puertas: 2 | Combustible: nafta
+Tipo: Moto | Patente: AAA123 | Marca: fiat | Año: 1900 | Precio: 120000.0 | Cilindrada: 100 | Tipo Moto: cross

@@ -3,7 +3,6 @@ package gestionauto.gestionautos;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import javafx.beans.binding.Bindings;
@@ -18,17 +17,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class PrimaryController implements Initializable {
 
-    // =======================
-    // FORMULARIO
-    // =======================
+    // ================= FORMULARIO =================
 
     @FXML private TextField txtPatente;
     @FXML private TextField txtMarca;
     @FXML private TextField txtAnio;
     @FXML private TextField txtPrecio;
-    @FXML private TextField txtExtra;
 
-    @FXML private Label lblExtra;
+    @FXML private TextField txtExtra1;
+    @FXML private TextField txtExtra2;
+
+    @FXML private Label lblExtra1;
+    @FXML private Label lblExtra2;
 
     @FXML private ComboBox<TipoVehiculo> cmbTipo;
     @FXML private ComboBox<String> cbOrdenar;
@@ -47,102 +47,80 @@ public class PrimaryController implements Initializable {
 
     private boolean cargandoFormulario = false;
 
-    // =======================
-    // INIT
-    // =======================
+    // ================= INIT =================
 
 @Override
 public void initialize(URL url, ResourceBundle rb) {
 
-    // =======================
-    // LISTA BASE
-    // =======================
-
-    vehiculos = FXCollections.observableArrayList();
-
+    // ================= CARGAR DATOS =================
     try {
-        vehiculos.addAll(ArchivoVehiculo.cargar());
+        vehiculos = FXCollections.observableArrayList(ArchivoVehiculo.cargar());
+        System.out.println("Vehículos cargados: " + vehiculos.size());
     } catch (Exception e) {
+        e.printStackTrace();
+        vehiculos = FXCollections.observableArrayList();
         mostrarError("No se pudieron cargar los vehículos");
     }
 
-    // =======================
-    // FILTRADO Y ORDEN
-    // =======================
-
+    // ================= FILTRADO Y ORDEN =================
     listaFiltrada = new FilteredList<>(vehiculos, p -> true);
     listaOrdenada = new SortedList<>(listaFiltrada);
-
-    listaOrdenada.comparatorProperty().bind(tablaVehiculos.comparatorProperty());
     tablaVehiculos.setItems(listaOrdenada);
 
-    // =======================
-    // CARGAR TIPOS VEHICULO
-    // =======================
-
-    cmbTipo.setItems(FXCollections.observableArrayList(TipoVehiculo.values()));
-    cmbTipo.getSelectionModel().selectFirst();
-
-    cmbTipo.valueProperty().addListener((obs, oldVal, newVal) ->
-            actualizarFormularioPorTipo(newVal)
-    );
-
-    // =======================
-    // OPCIONES ORDENAR
-    // =======================
-
-    cbOrdenar.setItems(FXCollections.observableArrayList(
-            "Patente", "Marca", "Año", "Precio"
-    ));
-
-    cbOrdenar.getSelectionModel().selectFirst();
-    cbOrdenar.setOnAction(e -> aplicarOrden());
-
-    // =======================
-    // OPCIONES FILTRAR
-    // =======================
-
-    cbFiltrar.setItems(FXCollections.observableArrayList(
-            "Todos", "Mayor a 50000", "Menor a 50000"
-    ));
-
-    cbFiltrar.getSelectionModel().selectFirst();
-    cbFiltrar.setOnAction(e -> aplicarFiltro());
-
-    // Aplicar por defecto
-    aplicarOrden();
-    aplicarFiltro();
-
-    // =======================
-    // COLUMNAS
-    // =======================
-
+    // ================= COLUMNAS =================
     colPatente.setCellValueFactory(new PropertyValueFactory<>("patente"));
     colMarca.setCellValueFactory(new PropertyValueFactory<>("marca"));
     colAnio.setCellValueFactory(new PropertyValueFactory<>("anio"));
 
     colPrecio.setCellValueFactory(data ->
-            Bindings.createObjectBinding(
-                    () -> data.getValue().calcularPrecio()
-            )
+            Bindings.createObjectBinding(() -> data.getValue().calcularPrecio())
     );
 
     tablaVehiculos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-    // =======================
-    // LISTENER SELECCION TABLA
-    // =======================
+    // ================= TIPOS =================
+    cmbTipo.setItems(FXCollections.observableArrayList(TipoVehiculo.values()));
+    cmbTipo.getSelectionModel().selectFirst();
+    cmbTipo.valueProperty().addListener((obs, o, n) -> actualizarFormularioPorTipo(n));
+    actualizarFormularioPorTipo(cmbTipo.getValue());
 
+    // ================= ORDENAR =================
+    cbOrdenar.setItems(FXCollections.observableArrayList("Patente", "Marca", "Año", "Precio"));
+    cbOrdenar.getSelectionModel().selectFirst();
+    cbOrdenar.setOnAction(e -> aplicarOrden());
+
+    // ================= FILTRAR =================
+    cbFiltrar.setItems(FXCollections.observableArrayList("Todos", "Mayor a 50000", "Menor a 50000"));
+    cbFiltrar.getSelectionModel().selectFirst();
+    cbFiltrar.setOnAction(e -> aplicarFiltro());
+
+    aplicarOrden();
+    aplicarFiltro();
+
+    // ================= SELECCIÓN TABLA =================
     tablaVehiculos.getSelectionModel().selectedItemProperty().addListener(
-            (obs, oldV, newV) -> cargarFormulario(newV)
+            (obs, oldV, newV) -> {
+                if (cargandoFormulario) return; // evita recursión
+                if (newV != null) {
+                    cargarFormulario(newV);
+                }
+            }
     );
+
+    // ================= CLICK EN FILAS (ÁREA VACÍA) =================
+    tablaVehiculos.setRowFactory(tv -> {
+        TableRow<Vehiculo> row = new TableRow<>();
+        row.setOnMouseClicked(event -> {
+            if (row.isEmpty()) {
+                tablaVehiculos.getSelectionModel().clearSelection();
+                limpiarFormulario();
+            }
+        });
+        return row;
+    });
 }
 
-
-    // =======================
-    // AGREGAR
-    // =======================
-
+    // ================= AGREGAR =================
     @FXML
     private void agregarVehiculo() {
 
@@ -151,7 +129,7 @@ public void initialize(URL url, ResourceBundle rb) {
 
             for (Vehiculo existente : vehiculos) {
                 if (existente.getPatente().equalsIgnoreCase(v.getPatente())) {
-                    throw new VehiculoDuplicadoException("Ya existe un vehículo con esa patente");
+                    throw new RuntimeException("Ya existe un vehículo con esa patente");
                 }
             }
 
@@ -164,9 +142,7 @@ public void initialize(URL url, ResourceBundle rb) {
         }
     }
 
-    // =======================
-    // MODIFICAR
-    // =======================
+    // ================= MODIFICAR =================
 
     @FXML
     private void modificarVehiculo() {
@@ -180,19 +156,7 @@ public void initialize(URL url, ResourceBundle rb) {
 
         try {
             Vehiculo nuevo = crearVehiculoDesdeFormulario();
-
-            for (Vehiculo v : vehiculos) {
-                if (!v.equals(seleccionado) &&
-                        v.getPatente().equalsIgnoreCase(nuevo.getPatente())) {
-                    throw new VehiculoDuplicadoException("Ya existe un vehículo con esa patente");
-                }
-            }
-
             int index = vehiculos.indexOf(seleccionado);
-
-            if (index == -1)
-                throw new VehiculoNoEncontradoException("Vehículo no encontrado");
-
             vehiculos.set(index, nuevo);
 
             guardarDatos();
@@ -203,9 +167,7 @@ public void initialize(URL url, ResourceBundle rb) {
         }
     }
 
-    // =======================
-    // ELIMINAR
-    // =======================
+    // ================= ELIMINAR =================
 
     @FXML
     private void eliminarVehiculo() {
@@ -222,71 +184,193 @@ public void initialize(URL url, ResourceBundle rb) {
         limpiarFormulario();
     }
 
-    // =======================
-    // ORDENAR
-    // =======================
+    // ================= CREAR VEHICULO =================
 
-private void aplicarOrden() {
+    private Vehiculo crearVehiculoDesdeFormulario() {
 
-    String criterio = cbOrdenar.getValue();
+        String patente = txtPatente.getText().trim();
+        String marca = txtMarca.getText().trim();
+        int anio = Integer.parseInt(txtAnio.getText().trim());
+        double precio = Double.parseDouble(txtPrecio.getText().trim());
 
-    tablaVehiculos.getSortOrder().clear();
+        String extra1 = txtExtra1.getText().trim();
+        String extra2 = txtExtra2.getText().trim();
 
-    if (criterio == null) return;
+        TipoVehiculo tipo = cmbTipo.getValue();
 
-    switch (criterio) {
-        case "Patente":
-            colPatente.setSortType(TableColumn.SortType.ASCENDING);
-            tablaVehiculos.getSortOrder().add(colPatente);
-            break;
+        switch (tipo) {
 
-        case "Marca":
-            colMarca.setSortType(TableColumn.SortType.ASCENDING);
-            tablaVehiculos.getSortOrder().add(colMarca);
-            break;
+            case AUTO:
+                return new Auto(
+                        patente,
+                        marca,
+                        anio,
+                        Integer.parseInt(extra1),
+                        extra2,
+                        precio
+                );
 
-        case "Año":
-            colAnio.setSortType(TableColumn.SortType.ASCENDING);
-            tablaVehiculos.getSortOrder().add(colAnio);
-            break;
+            case MOTO:
+                return new Moto(
+                        patente,
+                        marca,
+                        anio,
+                        Integer.parseInt(extra1),
+                        extra2,
+                        precio
+                );
 
-        case "Precio":
-            colPrecio.setSortType(TableColumn.SortType.ASCENDING);
-            tablaVehiculos.getSortOrder().add(colPrecio);
-            break;
+            case CAMION:
+                return new Camion(
+                        patente,
+                        marca,
+                        anio,
+                        Double.parseDouble(extra1),
+                        extra2,
+                        precio
+                );
+
+            default:
+                throw new IllegalArgumentException("Tipo inválido");
+        }
     }
-}
 
+    // ================= FORMULARIO =================
 
-    // =======================
-    // FILTRAR
-    // =======================
+    private void actualizarFormularioPorTipo(TipoVehiculo tipo) {
+
+        if (tipo == null || cargandoFormulario) return;
+
+        txtExtra1.clear();
+        txtExtra2.clear();
+
+        switch (tipo) {
+
+            case AUTO:
+                lblExtra1.setText("Puertas");
+                lblExtra2.setText("Tipo Combustible");
+                break;
+
+            case MOTO:
+                lblExtra1.setText("Cilindrada");
+                lblExtra2.setText("Tipo Moto");
+                break;
+
+            case CAMION:
+                lblExtra1.setText("Carga Máxima");
+                lblExtra2.setText("Tipo Cabina");
+                break;
+        }
+    }
+
+    private void cargarFormulario(Vehiculo v) {
+
+        cargandoFormulario = true;
+
+        txtPatente.setText(v.getPatente());
+        txtMarca.setText(v.getMarca());
+        txtAnio.setText(String.valueOf(v.getAnio()));
+        txtPrecio.setText(String.valueOf(v.getPrecioBase()));
+
+        if (v instanceof Auto) {
+            Auto a = (Auto) v;
+            cmbTipo.setValue(TipoVehiculo.AUTO);
+            txtExtra1.setText(String.valueOf(a.getPuertas()));
+            txtExtra2.setText(a.getTipoCombustible());
+        }
+        else if (v instanceof Moto) {
+            Moto m = (Moto) v;
+            cmbTipo.setValue(TipoVehiculo.MOTO);
+            txtExtra1.setText(String.valueOf(m.getCilindrada()));
+            txtExtra2.setText(m.getTipoMoto());
+        }
+        else if (v instanceof Camion) {
+            Camion c = (Camion) v;
+            cmbTipo.setValue(TipoVehiculo.CAMION);
+            txtExtra1.setText(String.valueOf(c.getCargaMaxima()));
+            txtExtra2.setText(c.getTipoCabina());
+        }
+
+        txtPatente.setDisable(true);
+        cmbTipo.setDisable(true);
+
+        cargandoFormulario = false;
+    }
+
+    private void limpiarFormulario() {
+
+        txtPatente.clear();
+        txtMarca.clear();
+        txtAnio.clear();
+        txtPrecio.clear();
+        txtExtra1.clear();
+        txtExtra2.clear();
+
+        tablaVehiculos.getSelectionModel().clearSelection();
+        cmbTipo.getSelectionModel().selectFirst();
+
+        txtPatente.setDisable(false);
+        cmbTipo.setDisable(false);
+    }
+
+    // ================= ORDEN =================
+
+    private void aplicarOrden() {
+
+        String criterio = cbOrdenar.getValue();
+
+        switch (criterio) {
+
+            case "Patente":
+                listaOrdenada.setComparator(
+                        (v1, v2) -> v1.getPatente().compareToIgnoreCase(v2.getPatente())
+                );
+                break;
+
+            case "Marca":
+                listaOrdenada.setComparator(
+                        (v1, v2) -> v1.getMarca().compareToIgnoreCase(v2.getMarca())
+                );
+                break;
+
+            case "Año":
+                listaOrdenada.setComparator(
+                        (v1, v2) -> Integer.compare(v1.getAnio(), v2.getAnio())
+                );
+                break;
+
+            case "Precio":
+                listaOrdenada.setComparator(
+                        (v1, v2) -> Double.compare(
+                                v1.calcularPrecio(),
+                                v2.calcularPrecio()
+                        )
+                );
+                break;
+        }
+    }
+    
+    // ================= FILTRO =================
 
     private void aplicarFiltro() {
 
-    String opcion = cbFiltrar.getValue();
-    if (opcion == null) return;
+        listaFiltrada.setPredicate(v -> {
 
-    listaFiltrada.setPredicate(vehiculo -> {
+            switch (cbFiltrar.getValue()) {
 
-        switch (opcion) {
+                case "Mayor a 50000":
+                    return v.calcularPrecio() > 50000;
 
-            case "Mayor a 50000":
-                return vehiculo.calcularPrecio() > 50000;
+                case "Menor a 50000":
+                    return v.calcularPrecio() < 50000;
 
-            case "Menor a 50000":
-                return vehiculo.calcularPrecio() < 50000;
+                default:
+                    return true;
+            }
+        });
+    }
 
-            default:
-                return true;
-        }
-    });
-}
-
-
-    // =======================
-    // EXPORTAR
-    // =======================
+    // ================= EXPORTAR =================
 
     @FXML
     private void exportarCSV() {
@@ -315,9 +399,7 @@ private void aplicarOrden() {
         }
     }
 
-    // =======================
-    // GUARDADO
-    // =======================
+    // ================= GUARDAR =================
 
     private void guardarDatos() {
         try {
@@ -327,156 +409,7 @@ private void aplicarOrden() {
         }
     }
 
-    // =======================
-    // FORMULARIO
-    // =======================
-
-private Vehiculo crearVehiculoDesdeFormulario() {
-
-    String patente = txtPatente.getText().trim();
-    String marca = txtMarca.getText().trim();
-    String anioTexto = txtAnio.getText().trim();
-    String precioTexto = txtPrecio.getText().trim();
-    String extraTexto = txtExtra.getText().trim();
-
-    // =====================
-    // VALIDACIONES BASICAS
-    // =====================
-
-    if (patente.isEmpty())
-        throw new IllegalArgumentException("La patente es obligatoria");
-
-    if (!patente.matches("^[A-Za-z0-9]{6,7}$"))
-        throw new IllegalArgumentException("Formato de patente inválido");
-
-    if (marca.isEmpty())
-        throw new IllegalArgumentException("La marca es obligatoria");
-
-    if (!marca.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$"))
-        throw new IllegalArgumentException("La marca solo puede contener letras");
-
-    if (anioTexto.isEmpty())
-        throw new IllegalArgumentException("El año es obligatorio");
-
-    if (precioTexto.isEmpty())
-        throw new IllegalArgumentException("El precio es obligatorio");
-
-    if (extraTexto.isEmpty())
-        throw new IllegalArgumentException("El campo adicional es obligatorio");
-
-    try {
-
-        int anio = Integer.parseInt(anioTexto);
-        double precio = Double.parseDouble(precioTexto);
-
-        // =====================
-        // VALIDACIONES LOGICAS
-        // =====================
-
-        if (anio < 1900 || anio > 2026)
-            throw new IllegalArgumentException("El año no es válido");
-
-        if (precio <= 0)
-            throw new IllegalArgumentException("El precio debe ser mayor a 0");
-
-        TipoVehiculo tipo = cmbTipo.getValue();
-
-        switch (tipo) {
-
-            case AUTO:
-                int puertas = Integer.parseInt(extraTexto);
-                if (puertas <= 0)
-                    throw new IllegalArgumentException("Cantidad de puertas inválida");
-                return new Auto(patente, marca, anio, puertas, precio);
-
-            case MOTO:
-                int cilindrada = Integer.parseInt(extraTexto);
-                if (cilindrada <= 0)
-                    throw new IllegalArgumentException("Cilindrada inválida");
-                return new Moto(patente, marca, anio, cilindrada, precio);
-
-            case CAMION:
-                double carga = Double.parseDouble(extraTexto);
-                if (carga <= 0)
-                    throw new IllegalArgumentException("Carga máxima inválida");
-                return new Camion(patente, marca, anio, carga, precio);
-
-            default:
-                throw new IllegalArgumentException("Tipo inválido");
-        }
-
-    } catch (NumberFormatException e) {
-        throw new IllegalArgumentException("Campos numéricos inválidos");
-    }
-}
-
-
-   private void cargarFormulario(Vehiculo v) {
-
-    if (v == null) return;
-
-    cargandoFormulario = true;
-
-    txtPatente.setText(v.getPatente());
-    txtMarca.setText(v.getMarca());
-    txtAnio.setText(String.valueOf(v.getAnio()));
-    txtPrecio.setText(String.valueOf(v.getPrecioBase()));
-
-    if (v instanceof Auto) {
-
-        Auto a = (Auto) v;
-        cmbTipo.setValue(TipoVehiculo.AUTO);
-        txtExtra.setText(String.valueOf(a.getPuertas()));
-
-    } else if (v instanceof Moto) {
-
-        Moto m = (Moto) v;
-        cmbTipo.setValue(TipoVehiculo.MOTO);
-        txtExtra.setText(String.valueOf(m.getCilindrada()));
-
-    } else if (v instanceof Camion) {
-
-        Camion c = (Camion) v;
-        cmbTipo.setValue(TipoVehiculo.CAMION);
-        txtExtra.setText(String.valueOf(c.getCargaMaxima()));
-    }
-
-    cargandoFormulario = false;
-}
-
-
-private void actualizarFormularioPorTipo(TipoVehiculo tipo) {
-
-    if (tipo == null || cargandoFormulario) return;
-
-    txtExtra.clear();
-
-    switch (tipo) {
-
-        case AUTO:
-            lblExtra.setText("Puertas");
-            break;
-
-        case MOTO:
-            lblExtra.setText("Cilindrada");
-            break;
-
-        case CAMION:
-            lblExtra.setText("Carga Máxima");
-            break;
-    }
-}
-
-
-    private void limpiarFormulario() {
-        txtPatente.clear();
-        txtMarca.clear();
-        txtAnio.clear();
-        txtPrecio.clear();
-        txtExtra.clear();
-        tablaVehiculos.getSelectionModel().clearSelection();
-        cmbTipo.getSelectionModel().selectFirst();
-    }
+    // ================= ALERTA =================
 
     private void mostrarError(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

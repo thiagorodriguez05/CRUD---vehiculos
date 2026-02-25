@@ -12,47 +12,66 @@ public abstract class Vehiculo
     protected int anio;
     protected double precioBase;
 
-    // CONSTRUCTOR PRINCIPAL
-    public Vehiculo(String patente, String marca, int anio,
-                    double precioBase) {
-        this.patente = patente;
+    public Vehiculo(String patente, String marca, int anio, double precioBase) {
+
+        validarPatente(patente);
+        validarMarca(marca);
+        validarAnio(anio);
+        validarPrecio(precioBase);
+
+        this.patente = patente.toUpperCase();
         this.marca = marca;
         this.anio = anio;
         this.precioBase = precioBase;
     }
 
-    // CONSTRUCTOR SIN PRECIO
-    public Vehiculo(String patente, String marca, int anio) {
-        this(patente, marca, anio, 0);
+    // ================= VALIDACIONES =================
+
+    private void validarPatente(String patente) {
+
+        if (patente == null || !patente.matches("^[A-Za-z]{3}\\d{3}$")) {
+            throw new IllegalArgumentException(
+                    "La patente debe tener 3 letras y 3 números (Ej: ABC123)");
+        }
     }
 
-    // CONSTRUCTOR SIMPLE
-    public Vehiculo(String patente) {
-        this(patente, "Sin marca", 0, 0);
+    private void validarMarca(String marca) {
+
+        if (marca == null || !marca.matches("^[A-Za-z ]+$")) {
+            throw new IllegalArgumentException(
+                    "La marca debe contener solo letras");
+        }
     }
 
-    // ========= GETTERS =========
-    public String getPatente() {
-        return patente;
+    private void validarAnio(int anio) {
+
+        if (anio < 1900 || anio > 2026) {
+            throw new IllegalArgumentException(
+                    "El año debe estar entre 1900 y 2026");
+        }
     }
 
-    public String getMarca() {
-        return marca;
+    private void validarPrecio(double precio) {
+
+        if (precio < 1000 || precio > 100000) {
+            throw new IllegalArgumentException(
+                    "El precio debe estar entre 10000 y 100000");
+        }
     }
 
-    public int getAnio() {
-        return anio;
-    }
+    // ================= GETTERS =================
 
-    public double getPrecioBase() {
-        return precioBase;
-    }
+    public String getPatente() { return patente; }
+    public String getMarca() { return marca; }
+    public int getAnio() { return anio; }
+    public double getPrecioBase() { return precioBase; }
 
     public double getPrecioFinal() {
         return calcularPrecio();
     }
 
-    // ========= EQUALS / HASHCODE =========
+    // ================= EQUALS / HASHCODE =================
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,15 +82,26 @@ public abstract class Vehiculo
 
     @Override
     public int hashCode() {
-        return patente.toLowerCase().hashCode();
+        return patente.toUpperCase().hashCode();
     }
 
-    // ========= ORDEN NATURAL =========
+    // ================= ORDEN NATURAL =================
+
     @Override
     public int compareTo(Vehiculo otro) {
         return this.patente.compareToIgnoreCase(otro.patente);
     }
 
-    // ========= ABSTRACTO =========
+    // ================= ABSTRACTO =================
+
     public abstract double calcularPrecio();
+
+    @Override
+    public String toString() {
+        return "Tipo: " + getClass().getSimpleName() +
+                " | Patente: " + patente +
+                " | Marca: " + marca +
+                " | Año: " + anio +
+                " | Precio: " + calcularPrecio();
+    }
 }
