@@ -46,7 +46,8 @@ El sistema fue diseñado aplicando herencia y polimorfismo.
 - Clases derivadas `Auto` y `Moto`
 - Clase `GestionVehiculos` que administra la colección
 - Uso de Iterator para recorridos
-<img width="1094" height="834" alt="image" src="https://github.com/user-attachments/assets/0393764f-3657-459d-8734-2b59518d3e04" />
+<img width="1045" height="855" alt="image" src="https://github.com/user-attachments/assets/b384c118-7018-4677-9288-2a83cbc2f2f4" />
+
 
 ---
 
